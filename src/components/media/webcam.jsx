@@ -10,9 +10,9 @@ export default function  WebcamComponent () {
     const mediaRecorderRef = React.useRef(null);
     const [capturing, setCapturing] = React.useState(false);
     const [recordedChunks, setRecordedChunks] = React.useState([]);
-
     const handleDataAvailable = React.useCallback(
         ({ data }) => {
+          console.log(data)
           if (data.size > 0) {
             setRecordedChunks((prev) => prev.concat(data));
           }
@@ -38,6 +38,7 @@ export default function  WebcamComponent () {
 
       const handleSave = React.useCallback(() => {
         if (recordedChunks.length) {
+            window.record.saveVideo()
             console.log(recordedChunks)
         }
       }, [recordedChunks]);
@@ -46,13 +47,13 @@ export default function  WebcamComponent () {
     <>
     <Webcam audio={false} ref={webcamRef} />
     {capturing ? (
-        <StopButton onClick={handleStop} />
-      ) : (
-        <RecordButton onClick={handleRecord} />
+        <StopButton handleStop={handleStop} />
 
+      ) : (
+        <RecordButton handleRecord={handleRecord} />
       )}
       {recordedChunks.length > 0 && (
-        <SaveButton onClick={handleSave}/>
+        <SaveButton handleSave={handleSave}/>
       )}
     </>)
 } 

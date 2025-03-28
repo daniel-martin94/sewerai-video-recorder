@@ -1,5 +1,5 @@
 import * as React from 'react';
 
-export default function StopButton({ handleRecord }) {
-    return <button onClick={handleRecord}>Record</button>
+export default function StopButton({ handleStop }) {
+    return <button onClick={() => handleStop()}>Stop</button>
 }
