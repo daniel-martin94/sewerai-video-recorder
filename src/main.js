@@ -52,12 +52,19 @@ app.on("window-all-closed", () => {
 
 ipcMain.handle("saveVideo", async (event, arrayBuffer) => {
   const path = `${app.getAppPath()}/public`;
+
   // make the directory if nonexistant
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path);
   }
   const buffer = Buffer.from(arrayBuffer);
   fs.writeFile(`${path}/video.webm`, buffer, () => {});
+
+  // Send result back to renderer process
+  mainWindow.webContents.send("getVideos", {
+    hello: "world",
+    path: app.getAppPath(),
+  });
 
   return;
 });
