@@ -30,14 +30,19 @@
     "@electron-forge/plugin-webpack": "^7.8.0",
     "@electron/fuses": "^1.8.0",
     "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "autoprefixer": "^10.4.21",
     "babel-loader": "^10.0.0",
     "css-loader": "^6.11.0",
     "electron": "35.1.2",
     "node-loader": "^2.1.0",
-    "style-loader": "^3.3.4"
+    "postcss-loader": "^8.1.1",
+    "style-loader": "^3.3.4",
+    "tailwindcss": "^4.0.17"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.0.17",
     "electron-squirrel-startup": "^1.0.1",
+    "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-webcam": "^7.2.0"
