@@ -78,7 +78,7 @@ export default function WebcamComponent () {
           <p className='top-4 right-4 absolute text-base text-white'>{formatTime(seconds)}</p>
         </>
         }
-        <Webcam audio={false} ref={webcamRef}  onLoadedData={() => setLoading(false)} />
+        <Webcam audio ref={webcamRef}  onLoadedData={() => setLoading(false)} />
       </div>
       {!loading && <div className="relative flex flex-row items-center justify-center w-full">
         {capturing ? (

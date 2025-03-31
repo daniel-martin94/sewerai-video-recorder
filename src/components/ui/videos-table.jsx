@@ -16,7 +16,9 @@ export default function VideosTable() {
     setIsLoaded(true)
   }
 
-  //listener to context bridge to update state when new videos are created
+  // listener to context bridge to update state when new videos are created
+  // no ideal because we aren't removing the listener on unmount
+  // but don't want to expose ipcRender context
   React.useEffect(() => {
     const handleResponse =  (data) => {
         setVideos(data?.videos)
@@ -28,36 +30,36 @@ export default function VideosTable() {
   if (videos?.length === 0) return
 
   return (
-  <div className="flex flex-col items-start justify-start mt-8">
-   <p className="text-white text-base text-left mb-4">Saved Videos</p>
-    <div className="min-w-2xl overflow-x-auto rounded-sm bg-white h-full">
-      <table className="min-w-full align-middle text-sm whitespace-nowrap">
-        <thead>
-          <tr className="border-b border-slate-300">
-            <Header text="Created" />
-            <Header text="" />
-          </tr>
-        </thead>
-        <tbody>
-          {videos.sort(sortFiles).map(
-            (
-              fileName,
-              index
-            ) => {
-              return (
-                <tr
-                  key={`video-${fileName}`}
-                  className={index % 2 === 0 ? "bg-slate-100" : "bg-slate-50"}
-                >
-                  <DataCell text={String(renderHumanReadableDate(fileName))} />
-                  <DataCell><Button onPress={() =>  window.open(` file:///${filePath}/${fileName}`, '_blank', 'popup=true')}> View</Button></DataCell>
-                </tr>
-              );
-            }
-          )}
-        </tbody>
-      </table>
-    </div>
+    <div className="flex flex-col items-start justify-start mt-8">
+      <p className="text-white text-base text-left mb-4">Saved Videos</p>
+      <div className="min-w-2xl overflow-x-auto rounded-sm bg-white h-full">
+        <table className="min-w-full align-middle text-sm whitespace-nowrap">
+          <thead>
+            <tr className="border-b border-slate-300">
+              <Header text="Created" />
+              <Header text="" />
+            </tr>
+          </thead>
+          <tbody>
+            {videos.sort(sortFiles).map(
+              (
+                fileName,
+                index
+              ) => {
+                return (
+                  <tr
+                    key={`video-${fileName}`}
+                    className={index % 2 === 0 ? "bg-slate-100" : "bg-slate-50"}
+                  >
+                    <DataCell text={String(renderHumanReadableDate(fileName))} />
+                    <DataCell><Button onPress={() =>  window.open(` file:///${filePath}/${fileName}`, '_blank', 'popup=true')}>View</Button></DataCell>
+                  </tr>
+                );
+              }
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

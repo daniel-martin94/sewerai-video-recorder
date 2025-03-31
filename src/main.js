@@ -9,6 +9,16 @@ if (require("electron-squirrel-startup")) {
 
 let mainWindow;
 
+function sendVideos(path) {
+  const files = fs.readdirSync(path);
+
+  // Send result back to renderer process
+  mainWindow.webContents.send("getVideos", {
+    videos: filterFilesByType(files, "webm"),
+    filePath: path,
+  });
+}
+
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -61,27 +71,12 @@ ipcMain.handle("saveVideo", async (event, arrayBuffer) => {
   }
   const buffer = Buffer.from(arrayBuffer);
   const now = new Date();
-  fs.writeFile(`${path}/${now.getTime()}.webm`, buffer, () => {
-    const files = fs.readdirSync(path);
-
-    // Send result back to renderer process
-    mainWindow.webContents.send("getVideos", {
-      videos: filterFilesByType(files, "webm"),
-      filePath: path,
-    });
-  });
+  fs.writeFile(`${path}/${now.getTime()}.webm`, buffer, () => sendVideos(path));
   return;
 });
 
 ipcMain.handle("fetchVideos", async (event) => {
   const path = `${app.getAppPath()}/public`;
-  const files = fs.readdirSync(path);
-
-  // Send result back to renderer process
-  mainWindow.webContents.send("getVideos", {
-    videos: filterFilesByType(files, "webm"),
-    filePath: path,
-  });
-
+  sendVideos(path);
   return;
 });
