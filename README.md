@@ -82,6 +82,3 @@ Fetches a list of recorded videos asynchronously.
 - Shows an error message if webcam access is denied or unavailable.
 - Ensures the video list updates dynamically when new videos are saved.
 
-## License
-This project is licensed under [MIT License](LICENSE).
-
