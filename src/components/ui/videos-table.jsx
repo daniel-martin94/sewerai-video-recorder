@@ -10,18 +10,20 @@ export default function VideosTable() {
   const [filePath, setFilePath] = React.useState("")
   const [videos, setVideos] = React.useState([]);
 
+  // runs once on initializarion
   if (!isLoaded) {
     window.api.fetchVideos()
     setIsLoaded(true)
   }
 
+  //listener to context bridge to update state when new videos are created
   React.useEffect(() => {
     const handleResponse =  (data) => {
         setVideos(data?.videos)
         setFilePath(data?.filePath)
       }
     window.api.getVideos(handleResponse)
-}, []);
+  });
 
   if (videos?.length === 0) return
 

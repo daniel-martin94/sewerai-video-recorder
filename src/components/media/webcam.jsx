@@ -5,12 +5,13 @@ import Button from '../buttons/button.jsx';
 import StopButton from '../buttons/stop-button.jsx';
 import { formatTime } from '../../utils/index.js';
 
-export default function  WebcamComponent () {
+export default function WebcamComponent () {
     const webcamRef = React.useRef(null);
     const mediaRecorderRef = React.useRef(null);
     const [seconds, setSeconds] = React.useState(0);
     const [capturing, setCapturing] = React.useState(false);
     const [recordedChunks, setRecordedChunks] = React.useState([]);
+    const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
       let intervalId;
@@ -52,33 +53,34 @@ export default function  WebcamComponent () {
         setSeconds(0)
       }, [mediaRecorderRef, webcamRef, setCapturing]);
 
-      const handleSave = React.useCallback(async () => {
-        if (recordedChunks.length > 0) {
-            const blob = new Blob(recordedChunks, {
-              type: "video/webm"
-            });
-            const arrayBuffer = await blob.arrayBuffer()
-            await window.api.saveVideo(arrayBuffer);
-            setRecordedChunks([])
-            setSeconds(0)
-        }
-      }, [recordedChunks]);
+    const handleSave = React.useCallback(async () => {
+      if (recordedChunks.length > 0) {
+          const blob = new Blob(recordedChunks, {
+            type: "video/webm"
+          });
+          const arrayBuffer = await blob.arrayBuffer()
+          await window.api.saveVideo(arrayBuffer);
+          setRecordedChunks([])
+          setSeconds(0)
+      }
+    }, [recordedChunks]);
 
     return (
     <div className="max-w-5xl">
       <div className='relative'>
+        {loading && (
+          <p className='text-white text-lg text-center'>Loading webcam...</p>
+        )}
         {capturing && 
         <>
           <div className='top-4 left-4 absolute w-4 h-4 bg-red-400 rounded-full animate-ping opacity-75'/>
           <div className='top-4 left-4 absolute w-4 h-4 bg-red-400 rounded-full'/>
+          <p className='top-4 right-4 absolute text-base text-white'>{formatTime(seconds)}</p>
         </>
         }
-        <Webcam audio={false} ref={webcamRef} />
-        {capturing && 
-          <p className='top-4 right-4 absolute text-base text-white'>{formatTime(seconds)}</p>
-        }
+        <Webcam audio={false} ref={webcamRef}  onLoadedData={() => setLoading(false)} />
       </div>
-      <div className="relative flex flex-row items-center justify-center w-full">
+      {!loading && <div className="relative flex flex-row items-center justify-center w-full">
         {capturing ? (
           <StopButton handleStop={handleStop} />
         ) : (
@@ -89,6 +91,6 @@ export default function  WebcamComponent () {
             <Button onPress={handleSave}> Save </Button>
           </div>
         )}
-      </div>
+      </div> }
     </div>)
 } 
