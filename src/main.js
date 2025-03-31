@@ -9,12 +9,19 @@ if (require("electron-squirrel-startup")) {
 
 let mainWindow;
 
+// Define the path to the public directory in the app's base path
+const path = `${app.getAppPath()}/public`;
+
+// Function to send a list of video files to the renderer process
 function sendVideos(path) {
+  // Read the contents of the directory at the given path
   const files = fs.readdirSync(path);
 
-  // Send result back to renderer process
+  // Send the list of video files (filtered by the "webm" type) to the renderer process
   mainWindow.webContents.send("getVideos", {
+    // Filter the files to include only "webm" video files
     videos: filterFilesByType(files, "webm"),
+    // Include the directory path in the response
     filePath: path,
   });
 }
@@ -62,21 +69,31 @@ app.on("window-all-closed", () => {
   }
 });
 
+// Handle the 'saveVideo' IPC request
 ipcMain.handle("saveVideo", async (event, arrayBuffer) => {
-  const path = `${app.getAppPath()}/public`;
-
-  // make the directory if nonexistant
+  // Check if the directory exists; if not, create it
   if (!fs.existsSync(path)) {
     fs.mkdirSync(path);
   }
+
+  // Convert the arrayBuffer to a Buffer for writing to a file
   const buffer = Buffer.from(arrayBuffer);
+
+  // Get the current timestamp to name the video file uniquely
   const now = new Date();
+
+  // Write the buffer to a .webm file, and after writing, send the updated list of videos
   fs.writeFile(`${path}/${now.getTime()}.webm`, buffer, () => sendVideos(path));
+
+  // End the handling of the IPC request
   return;
 });
 
+// Handle the 'fetchVideos' IPC request
 ipcMain.handle("fetchVideos", async (event) => {
-  const path = `${app.getAppPath()}/public`;
+  // Send the list of videos from the directory
   sendVideos(path);
+
+  // End the handling of the IPC request
   return;
 });
