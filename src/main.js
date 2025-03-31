@@ -31,7 +31,7 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createWindow();
 
   // On OS X it's common to re-create a window in the app when the
@@ -66,7 +66,7 @@ ipcMain.handle("saveVideo", async (event, arrayBuffer) => {
   const files = fs.readdirSync(path);
 
   // Send result back to renderer process
-  mainWindow.webContents.send("getVideos", {
+  await mainWindow.webContents.send("getVideos", {
     videos: filterFilesByType(files, "webm"),
     filePath: path,
   });
@@ -79,7 +79,7 @@ ipcMain.handle("fetchVideos", async (event) => {
   const files = fs.readdirSync(path);
 
   // Send result back to renderer process
-  mainWindow.webContents.send("getVideos", {
+  await mainWindow.webContents.send("getVideos", {
     videos: filterFilesByType(files, "webm"),
     filePath: path,
   });

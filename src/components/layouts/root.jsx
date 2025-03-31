@@ -3,7 +3,7 @@ import WebcamComponent from '../media/webcam.jsx';
 import VideosTable from '../ui/videos-table.jsx';
 
 export default function Root() {
-    return <div className='container flex flex-col items-center justify-center mx-32'>
+    return <div className='bg-gray-800 py-16 flex flex-col items-center justify-center mx-auto'>
         <WebcamComponent />
         <VideosTable />
         </div>
