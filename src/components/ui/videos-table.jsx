@@ -31,7 +31,7 @@ export default function VideosTable() {
 
   return (
     <div className="flex flex-col items-start justify-start mt-8">
-      <p className="text-white text-base text-left mb-4">Saved Videos</p>
+      <p className="text-white text-base text-left mb-4">Recordings</p>
       <div className="min-w-2xl overflow-x-auto rounded-sm bg-white h-full">
         <table className="min-w-full align-middle text-sm whitespace-nowrap">
           <thead>

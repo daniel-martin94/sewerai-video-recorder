@@ -12,6 +12,7 @@ export default function WebcamComponent () {
     const [capturing, setCapturing] = React.useState(false);
     const [recordedChunks, setRecordedChunks] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
+    const [isError, setIsError] = React.useState(false);
 
     React.useEffect(() => {
       let intervalId;
@@ -68,8 +69,11 @@ export default function WebcamComponent () {
     return (
     <div className="max-w-5xl">
       <div className='relative'>
-        {loading && (
+        {loading && !isError && (
           <p className='text-white text-lg text-center'>Loading webcam...</p>
+        )}
+        {isError && (
+          <p className='text-red-500 text-lg text-center'>Unable to load webcam. Please check your system permissions.</p>
         )}
         {capturing && 
         <>
@@ -78,7 +82,7 @@ export default function WebcamComponent () {
           <p className='top-4 right-4 absolute text-base text-white'>{formatTime(seconds)}</p>
         </>
         }
-        <Webcam audio ref={webcamRef}  onLoadedData={() => setLoading(false)} />
+        <Webcam audio ref={webcamRef}  onLoadedData={() => setLoading(false)} onUserMediaError={() => setIsError(true)}/>
       </div>
       {!loading && <div className="relative flex flex-row items-center justify-center w-full">
         {capturing ? (
