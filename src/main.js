@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const fs = require("fs");
 const { filterFilesByType } = require("./utils/index");
 
@@ -17,6 +17,7 @@ const createWindow = () => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       nodeIntegration: true,
+      webSecurity: false,
     },
   });
 
@@ -66,8 +67,30 @@ ipcMain.handle("saveVideo", async (event, arrayBuffer) => {
 
   // Send result back to renderer process
   mainWindow.webContents.send("getVideos", {
-    hello: "world",
-    results: filterFilesByType(files, "webm"),
+    videos: filterFilesByType(files, "webm"),
+    filePath: path,
+  });
+
+  return;
+});
+
+ipcMain.handle("openVideo", async (event, fileName) => {
+  const path = `${app.getAppPath()}/public`;
+
+  // make the directory if nonexistant
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path);
+  }
+  const buffer = Buffer.from(arrayBuffer);
+  const now = new Date();
+  fs.writeFile(`${path}/${now.getTime()}.webm`, buffer, () => {});
+
+  const files = fs.readdirSync(path);
+
+  // Send result back to renderer process
+  mainWindow.webContents.send("getVideos", {
+    videos: filterFilesByType(files, "webm"),
+    filePath: path,
   });
 
   return;

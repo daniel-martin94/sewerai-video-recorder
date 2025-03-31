@@ -31,3 +31,15 @@ export function renderHumanReadableDate(fileName) {
   };
   return date.toLocaleDateString(undefined, options);
 }
+
+export function sortFiles(fileNameOne, fileNameTwo) {
+  // Extract timestamp from filename
+  const match1 = fileNameOne.match(/(\d+)\.webm$/);
+  const match2 = fileNameTwo.match(/(\d+)\.webm$/);
+
+  // Convert timestamp to integer
+  const timestampOne = parseInt(match1[1], 10);
+  const timestampTwo = parseInt(match2[1], 10);
+
+  return timestampTwo - timestampOne;
+}

@@ -1,16 +1,16 @@
 
 import * as React from "react";
-import { renderHumanReadableDate } from '../../utils/index.js'
+import { renderHumanReadableDate, sortFiles } from '../../utils/index.js'
 import Header from "./header.jsx";
 import DataCell from "./data-cell.jsx";
 
 export default function VideosTable() {
+  const [filePath, setFilePath] = React.useState("")
   const [videos, setVideos] = React.useState([]);
 
   window.api.getVideos((data) => {
-    console.log(`Received from main process`);
-    console.log(data)
-    setVideos(data?.results)
+    setVideos(data?.videos)
+    setFilePath(data?.filePath)
   })
 
   if (videos?.length === 0)
@@ -29,7 +29,7 @@ export default function VideosTable() {
           </tr>
         </thead>
         <tbody>
-          {videos.map(
+          {videos.sort(sortFiles).map(
             (
               fileName,
               index
@@ -39,6 +39,7 @@ export default function VideosTable() {
                   key={`video-${fileName}`}
                   className={index % 2 === 0 ? "bg-slate-100" : "bg-slate-50"}
                 >
+                  <button onClick={() =>  window.open(` file:///${filePath}/${fileName}`, '_blank', 'top=500,left=200,popup=true')}/>
                   <DataCell text={String(renderHumanReadableDate(fileName))} />
                 </tr>
               );
