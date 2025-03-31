@@ -60,6 +60,8 @@ Recorded videos are saved in the `/public` subdirectory in `.webm` format.
 - `WebcamComponent.jsx`: Handles webcam recording logic.
 - `VideosTable.jsx`: Displays a list of recorded videos with view options.
 - `record-button.jsx`: Button to start recording.
+- `recording-controls.jsx`: Parent container to hold record start, stop, and save buttons.
+- `recording-indicators.jsx`: Red dot indicator and video record duration.
 - `stop-button.jsx`: Button to stop recording.
 - `button.jsx`: Generic button component.
 - `header.jsx`: Table header component.

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Webcam from "react-webcam";
-import RecordButton from '../buttons/record-button.jsx';
-import Button from '../buttons/button.jsx';
-import StopButton from '../buttons/stop-button.jsx';
-import { formatTime } from '../../utils/index.js';
+import RecordingControls from './recording-controls.jsx';
+import RecordingIndicators from './recording-indicators.jsx';
 
 export default function WebcamComponent () {
     const webcamRef = React.useRef(null);
@@ -13,7 +11,8 @@ export default function WebcamComponent () {
     const [recordedChunks, setRecordedChunks] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [isError, setIsError] = React.useState(false);
-
+    const isLoading = loading && !isError
+    
     React.useEffect(() => {
       let intervalId;
   
@@ -69,32 +68,22 @@ export default function WebcamComponent () {
     return (
     <div className="max-w-5xl">
       <div className='relative'>
-        {loading && !isError && (
+        {isLoading && (
           <p className='text-white text-lg text-center'>Loading webcam...</p>
         )}
         {isError && (
           <p className='text-red-500 text-lg text-center'>Unable to load webcam. Please check your system permissions.</p>
         )}
-        {capturing && 
-        <>
-          <div className='top-4 left-4 absolute w-4 h-4 bg-red-400 rounded-full animate-ping opacity-75'/>
-          <div className='top-4 left-4 absolute w-4 h-4 bg-red-400 rounded-full'/>
-          <p className='top-4 right-4 absolute text-base text-white'>{formatTime(seconds)}</p>
-        </>
-        }
+        <RecordingIndicators isCapturing={capturing} seconds={seconds} />
         <Webcam audio ref={webcamRef}  onLoadedData={() => setLoading(false)} onUserMediaError={() => setIsError(true)}/>
       </div>
-      {!loading && <div className="relative flex flex-row items-center justify-center w-full">
-        {capturing ? (
-          <StopButton handleStop={handleStop} />
-        ) : (
-          <RecordButton handleRecord={handleRecord} />
-        )}
-        {recordedChunks.length > 0 && !capturing && (
-          <div className='absolute right-2 mt-2'>
-            <Button onPress={handleSave}> Save </Button>
-          </div>
-        )}
-      </div> }
+      <RecordingControls 
+        isLoading={isLoading}
+        isCapturing={capturing}
+        handleStop={handleStop} 
+        handleRecord={handleRecord} 
+        isRecording={recordedChunks.length > 0 && !capturing} 
+        handleSave={handleSave}
+      />
     </div>)
 } 
