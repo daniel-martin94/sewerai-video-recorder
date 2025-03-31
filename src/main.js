@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const fs = require("fs");
+const { filterFilesByType } = require("./utils/index");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -58,12 +59,15 @@ ipcMain.handle("saveVideo", async (event, arrayBuffer) => {
     fs.mkdirSync(path);
   }
   const buffer = Buffer.from(arrayBuffer);
-  fs.writeFile(`${path}/video.webm`, buffer, () => {});
+  const now = new Date();
+  fs.writeFile(`${path}/${now.getTime()}.webm`, buffer, () => {});
+
+  const files = fs.readdirSync(path);
 
   // Send result back to renderer process
   mainWindow.webContents.send("getVideos", {
     hello: "world",
-    path: app.getAppPath(),
+    results: filterFilesByType(files, "webm"),
   });
 
   return;

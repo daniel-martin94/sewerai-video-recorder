@@ -1,14 +1,16 @@
 
 import * as React from "react";
+import { renderHumanReadableDate } from '../../utils/index.js'
 import Header from "./header.jsx";
 import DataCell from "./data-cell.jsx";
 
 export default function VideosTable() {
-  const videos= []
+  const [videos, setVideos] = React.useState([]);
 
   window.api.getVideos((data) => {
     console.log(`Received from main process`);
     console.log(data)
+    setVideos(data?.results)
   })
 
   if (videos?.length === 0)
@@ -22,52 +24,26 @@ export default function VideosTable() {
       <table className="min-w-full align-middle text-sm whitespace-nowrap">
         <thead>
           <tr className="border-b border-slate-300">
-            <Header text="ID" />
-            <Header text="First Name" />
-            <Header text="Last Name" />
-            <Header text="City" />
-            <Header text="Degree" />
-            <Header text="Specialties" />
-            <Header text="Years of Experience" />
-            <Header text="Phone Number" />
+            <Header text="Date" />
+            <Header text="" />
           </tr>
         </thead>
         <tbody>
-          {/* {advocates.map(
+          {videos.map(
             (
-              {
-                firstName,
-                lastName,
-                city,
-                degree,
-                specialties,
-                yearsOfExperience,
-                phoneNumber,
-                id,
-              }
-              index: number
+              fileName,
+              index
             ) => {
               return (
                 <tr
-                  key={`advocate-${id}`}
+                  key={`video-${fileName}`}
                   className={index % 2 === 0 ? "bg-slate-100" : "bg-slate-50"}
                 >
-                  <TableDataCell text={String(id)} />
-                  <TableDataCell text={firstName} />
-                  <TableDataCell text={lastName} />
-                  <TableDataCell text={city} />
-                  <TableDataCell text={degree} />
-                  <TableDataCell>
-                    {specialties.map((s: string, index: number) => (
-                      <div key={`advocate-${id}-speciality-${index}`}>{s}</div>
-                    ))}
-                  </TableDataCell>
-                  <TableDataCell text={String(yearsOfExperience)} />
-                  <TableDataCell text={String(phoneNumber)} />
+                  <DataCell text={String(renderHumanReadableDate(fileName))} />
                 </tr>
               );
             }
-          )} */}
+          )}
         </tbody>
       </table>
     </div>
