@@ -10,15 +10,15 @@ export default function VideosTable() {
   const [filePath, setFilePath] = React.useState("")
   const [videos, setVideos] = React.useState([]);
 
-  // runs once on initializarion
+  // Runs once on initialization to fetch videos
   if (!isLoaded) {
     window.api.fetchVideos()
     setIsLoaded(true)
   }
 
-  // listener to context bridge to update state when new videos are created
-  // no ideal because we aren't removing the listener on unmount
-  // but don't want to expose ipcRender context
+  // Listens to the context bridge to update the state when new videos are created
+  // Not ideal because we're not removing the listener on unmount to avoid memory leaks,
+  // but we don't want to expose ipcRenderer context here.
   React.useEffect(() => {
     const handleResponse =  (data) => {
         setVideos(data?.videos)
