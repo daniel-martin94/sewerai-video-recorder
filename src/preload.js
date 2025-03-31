@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld("api", {
   getVideos: (func) => {
     ipcRenderer.on("getVideos", (_, ...args) => func(...args));
   },
-  openVideo: async (fileName) => {
-    return await ipcRenderer.invoke("openVideo", fileName);
+  fetchVideos: async () => {
+    return await ipcRenderer.invoke("fetchVideos");
   },
 });

@@ -13,6 +13,10 @@ export default function VideosTable() {
     setFilePath(data?.filePath)
   })
 
+  React.useEffect(() => {
+    window.api.fetchVideos()
+  }, [])
+
   if (videos?.length === 0)
     return (
       <p className="text-lg bg-transparent text-slate-100">

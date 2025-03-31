@@ -74,17 +74,8 @@ ipcMain.handle("saveVideo", async (event, arrayBuffer) => {
   return;
 });
 
-ipcMain.handle("openVideo", async (event, fileName) => {
+ipcMain.handle("fetchVideos", async (event) => {
   const path = `${app.getAppPath()}/public`;
-
-  // make the directory if nonexistant
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
-  }
-  const buffer = Buffer.from(arrayBuffer);
-  const now = new Date();
-  fs.writeFile(`${path}/${now.getTime()}.webm`, buffer, () => {});
-
   const files = fs.readdirSync(path);
 
   // Send result back to renderer process
