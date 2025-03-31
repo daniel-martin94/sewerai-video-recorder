@@ -1,9 +1,7 @@
 import * as React from 'react';
-import Webcam from "react-webcam";
 import RecordButton from '../buttons/record-button.jsx';
 import Button from '../buttons/button.jsx';
 import StopButton from '../buttons/stop-button.jsx';
-import { formatTime } from '../../utils/index.js';
 
 export default function RecordingControls({ isLoading, handleRecord, handleStop, isRecording, handleSave, isCapturing}) {
     
