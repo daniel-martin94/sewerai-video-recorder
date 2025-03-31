@@ -5,7 +5,6 @@ import Button from '../buttons/button.jsx';
 import StopButton from '../buttons/stop-button.jsx';
 import { formatTime } from '../../utils/index.js';
 
-
 export default function  WebcamComponent () {
     const webcamRef = React.useRef(null);
     const mediaRecorderRef = React.useRef(null);

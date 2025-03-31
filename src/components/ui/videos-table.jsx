@@ -9,14 +9,22 @@ export default function VideosTable() {
   const [isLoaded, setIsLoaded] = React.useState(false)
   const [filePath, setFilePath] = React.useState("")
   const [videos, setVideos] = React.useState([]);
-  console.log({ isLoaded })
 
-  window.api.getVideos((data) => {
-    setVideos(data?.videos)
-    setFilePath(data?.filePath)
-  })
+  if (!isLoaded) {
+    window.api.fetchVideos()
+    setIsLoaded(true)
+  }
+
+  React.useEffect(() => {
+    const handleResponse =  (data) => {
+        setVideos(data?.videos)
+        setFilePath(data?.filePath)
+      }
+    window.api.getVideos(handleResponse)
+}, []);
 
   if (videos?.length === 0) return
+
   return (
   <div className="flex flex-col items-start justify-start mt-8">
    <p className="text-white text-base text-left mb-4">Saved Videos</p>

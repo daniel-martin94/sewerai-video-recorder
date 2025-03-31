@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const fs = require("fs");
 const { filterFilesByType } = require("./utils/index");
 
@@ -31,7 +31,7 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(async () => {
+app.whenReady().then(() => {
   createWindow();
 
   // On OS X it's common to re-create a window in the app when the
@@ -61,16 +61,15 @@ ipcMain.handle("saveVideo", async (event, arrayBuffer) => {
   }
   const buffer = Buffer.from(arrayBuffer);
   const now = new Date();
-  fs.writeFile(`${path}/${now.getTime()}.webm`, buffer, () => {});
+  fs.writeFile(`${path}/${now.getTime()}.webm`, buffer, () => {
+    const files = fs.readdirSync(path);
 
-  const files = fs.readdirSync(path);
-
-  // Send result back to renderer process
-  await mainWindow.webContents.send("getVideos", {
-    videos: filterFilesByType(files, "webm"),
-    filePath: path,
+    // Send result back to renderer process
+    mainWindow.webContents.send("getVideos", {
+      videos: filterFilesByType(files, "webm"),
+      filePath: path,
+    });
   });
-
   return;
 });
 
@@ -79,7 +78,7 @@ ipcMain.handle("fetchVideos", async (event) => {
   const files = fs.readdirSync(path);
 
   // Send result back to renderer process
-  await mainWindow.webContents.send("getVideos", {
+  mainWindow.webContents.send("getVideos", {
     videos: filterFilesByType(files, "webm"),
     filePath: path,
   });
